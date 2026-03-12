@@ -3,6 +3,8 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# hide private info
+appsettings.Development.json
 # dotenv files
 .env
 
