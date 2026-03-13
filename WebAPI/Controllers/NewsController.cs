@@ -64,7 +64,7 @@ namespace WebAPI.Controllers
         }
 
 
-        // get的關鍵字搜尋 (針對Title、Content和StartDateTime做過濾)
+        // get的關鍵字搜尋 (針對Title、Content、StartDateTime、Click做過濾)
         [HttpGet("GetKeyWord")]
         public ActionResult<IEnumerable<NewsDto>> GetKeyWord([FromQuery] GetKeyWordParam query)
         {
@@ -96,6 +96,11 @@ namespace WebAPI.Controllers
             if (query.StartDateTime != null) 
             {
                 result = result.Where(a => a.StartDateTime.Date == ((DateTime)query.StartDateTime).Date);
+            }
+            // 4. 過濾Click次數
+            if (query.Click != null)
+            {
+                result = result.Where(a => a.Click == query.Click);
             }
 
             // 執行查詢並回傳 (ToList() => 送出SQL)
