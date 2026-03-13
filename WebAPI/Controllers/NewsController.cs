@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.Dtos;
 using WebAPI.Models;
+using WebAPI.Parameters;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -65,7 +66,7 @@ namespace WebAPI.Controllers
 
         // get的關鍵字搜尋 (針對Title、Content和StartDateTime做過濾)
         [HttpGet("GetKeyWord")]
-        public ActionResult<IEnumerable<NewsDto>> GetKeyWord(String? Title, String? Content, DateTime? StartDateTime) // ?表示: 這個參數不一定會有值過來，如果沒有值傳過來就會是null。
+        public ActionResult<IEnumerable<NewsDto>> GetKeyWord([FromQuery] GetKeyWordParam query)
         {
 
             // 先取得所有 (SQL還未送出去)
@@ -82,19 +83,19 @@ namespace WebAPI.Controllers
 
             // 再過濾 (SQL還未送出去)
             // 1. 過濾title
-            if (!string.IsNullOrWhiteSpace(Title))   // 非null或空，才往下執行
+            if (!string.IsNullOrWhiteSpace(query.Title))   // 非null或空，才往下執行
             {
-                result = result.Where(a => a.Title.Contains(Title));
+                result = result.Where(a => a.Title.Contains(query.Title));
             }
             // 2. 過濾content
-            if (!string.IsNullOrWhiteSpace(Content))   // 非null或空，才往下執行
+            if (!string.IsNullOrWhiteSpace(query.Content))   // 非null或空，才往下執行
             {
-                result = result.Where(a => a.Content.Contains(Content));
+                result = result.Where(a => a.Content.Contains(query.Content));
             }
             // 3. 過濾StartDateTime
-            if (StartDateTime != null) 
+            if (query.StartDateTime != null) 
             {
-                result = result.Where(a => a.StartDateTime.Date == ((DateTime)StartDateTime).Date);
+                result = result.Where(a => a.StartDateTime.Date == ((DateTime)query.StartDateTime).Date);
             }
 
             // 執行查詢並回傳 (ToList() => 送出SQL)
